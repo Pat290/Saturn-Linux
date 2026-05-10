@@ -1,0 +1,44 @@
+---
+componentName:  archiso
+
+welcomeStyleCalamares:   false
+
+welcomeExpandingLogo:   true
+
+windowExpanding:    noexpand
+
+windowSize: 1150px,700px
+
+windowPlacement: center
+
+sidebar: widget
+
+navigation: widget
+
+strings:
+    productName:         Saturn Linux
+    shortProductName:    Saturn
+    version:             standard
+    shortVersion:        2026.04.2
+    versionedName:       Saturn Linux
+    shortVersionedName:  Saturn
+    bootloaderEntryName: Saturn Linux
+
+images:
+    productIcon:            "logo.png"
+    productLogo:            "squid.png"
+    productWelcome:         "idioma.png"
+
+style:
+   SidebarBackground:        "#000000"
+   SidebarText:              "#FFFFFF"
+   SidebarTextCurrent:       "#FFFFFF"
+   SidebarBackgroundCurrent: "#0d66d4"
+
+slideshow:               "show.qml"
+
+slideshowAPI: 2
+
+uploadServer :
+    type :    "fiche"
+    url :     "http://termbin.com:9999"

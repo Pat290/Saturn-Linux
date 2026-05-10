@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Re-generate initramfs images
+mkinitcpio -P || { echo "ERROR: mkinitcpio failed" >&2; exit 1; }
+
+# Create loader configuration
+cat > /boot/loader/loader.conf <<EOF
+default  Saturn.conf
+timeout  5
+console-mode max
+editor   no
+EOF
+
+# Resolve root UUID with fallbacks
+_get_root_uuid() {
+    local uuid device
+
+    uuid=$(findmnt -no UUID /)
+    [ -n "$uuid" ] && echo "$uuid" && return 0
+
+    device=$(findmnt -no SOURCE /)
+    uuid=$(blkid -s UUID -o value "$device" 2>/dev/null)
+    [ -n "$uuid" ] && echo "$uuid" && return 0
+
+    uuid=$(awk '$2 == "/" { print $1 }' /etc/fstab | grep -oP 'UUID=\K\S+')
+    [ -n "$uuid" ] && echo "$uuid" && return 0
+
+    echo "ERROR: could not determine root UUID" >&2
+    return 1
+}
+
+ROOT_UUID=$(_get_root_uuid) || exit 1
+
+# Create boot entry
+cat > /boot/loader/entries/Saturn.conf <<EOF
+title    Saturn
+linux    /vmlinuz-linux
+initrd   /initramfs-linux.img
+options  quiet splash root=UUID=$ROOT_UUID rw
+EOF
